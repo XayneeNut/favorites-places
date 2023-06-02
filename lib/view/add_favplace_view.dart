@@ -1,5 +1,6 @@
 import 'package:favorite_places/generator/random_int_id.dart';
 import 'package:favorite_places/models/favorite_place_model.dart';
+import 'package:favorite_places/view/add_favplace_alternative.dart';
 import 'package:flutter/material.dart';
 
 class AddFavPlaceView extends StatefulWidget {
@@ -12,7 +13,7 @@ class AddFavPlaceView extends StatefulWidget {
 class _AddFavPlaceViewState extends State<AddFavPlaceView> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = '';
-  var _id = RandomIntId().gusantaIdGen();
+  final _id = RandomIntId().gusantaIdGen();
 
   void _saveItem() {
     if (_formKey.currentState!.validate()) {
@@ -25,53 +26,61 @@ class _AddFavPlaceViewState extends State<AddFavPlaceView> {
     Navigator.pop(context, newItem);
   }
 
+  void _saveItemAlternative() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (ctx) => AddFavoritePlaceAlternative()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('add new favorite place'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(children: [
-            TextFormField(
-              maxLength: 50,
-              minLines: 1,
-              maxLines: 3,
-              decoration: const InputDecoration(
-                label: Text('name'),
-                labelStyle: TextStyle(color: Colors.white),
-              ),
-              style: const TextStyle(color: Colors.white),
-              validator: (value) {
-                if (value == null ||
-                    value.isEmpty ||
-                    value.trim().length <= 1 ||
-                    value.trim().length > 50) {
-                  return 'Must be between 1 and 50 characters';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _enteredName = value!;
-              },
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: _saveItem,
-                  child: const Text(
-                    'add',
-                    style: TextStyle(color: Colors.white),
-                  ),
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            children: [
+              TextFormField(
+                maxLength: 50,
+                minLines: 1,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  label: Text('name'),
+                  labelStyle: TextStyle(color: Colors.white),
                 ),
-              ],
-            ),
-          ]),
+                style: const TextStyle(color: Colors.white),
+                validator: (value) {
+                  if (value == null ||
+                      value.isEmpty ||
+                      value.trim().length <= 1 ||
+                      value.trim().length > 50) {
+                    return 'Must be between 1 and 50 characters';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _enteredName = value!;
+                },
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: _saveItemAlternative,
+                    icon: const Icon(Icons.add),
+                    label: const Text(
+                      'add',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

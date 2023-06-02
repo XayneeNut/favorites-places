@@ -22,9 +22,11 @@ class _HomeFavPlaceViewState extends State<HomeFavPlaceView> {
     );
 
     if (newItem != null) {
-      setState(() {
-        _favoritePlaces.add(newItem);
-      });
+      setState(
+        () {
+          _favoritePlaces.add(newItem);
+        },
+      );
     }
   }
 
@@ -44,18 +46,26 @@ class _HomeFavPlaceViewState extends State<HomeFavPlaceView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('favorite places'), actions: [
-        IconButton(onPressed: _onAddIcon, icon: const Icon(Icons.add))
-      ]),
+      appBar: AppBar(
+        title: const Text('favorite places'),
+        actions: [
+          IconButton(
+            onPressed: _onAddIcon,
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
       body: ListView.builder(
         itemCount: _favoritePlaces.length,
         itemBuilder: (ctx, index) => Dismissible(
           onDismissed: (direction) {
-            setState(() {
-              _favoritePlaces.removeAt(index);
-            });
+            setState(
+              () {
+                _favoritePlaces.removeAt(index);
+              },
+            );
           },
-          key: ValueKey(_favoritePlaces[index].id),
+           key: ValueKey(_favoritePlaces[index].id),
           child: ListTile(
             title: Text(
               _favoritePlaces[index].name,
