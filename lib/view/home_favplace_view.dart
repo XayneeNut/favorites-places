@@ -36,7 +36,7 @@ class _HomeFavPlaceViewState extends State<HomeFavPlaceView> {
         context,
         MaterialPageRoute(
           builder: (context) => FavoritePlaceView(
-            title: _favoritePlaces[index].name,
+            favoritePlaceModel: _favoritePlaces[index],
           ),
         ),
       );
