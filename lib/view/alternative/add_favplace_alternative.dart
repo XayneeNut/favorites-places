@@ -1,4 +1,5 @@
 import 'package:favorite_places/riverpod/user_places.dart';
+import 'package:favorite_places/widgets/image_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -47,6 +48,8 @@ class _AddFavoritePlaceAlternativeState
               style:
                   TextStyle(color: Theme.of(context).colorScheme.onBackground),
             ),
+            const SizedBox(height: 20),
+            ImageInput(),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
