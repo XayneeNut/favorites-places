@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:favorite_places/generator/random_int_id.dart';
 import 'package:favorite_places/models/favorite_place_model.dart';
+import 'package:favorite_places/widgets/image_input.dart';
 import 'package:flutter/material.dart';
 
 class AddFavPlaceView extends StatefulWidget {
@@ -13,6 +16,7 @@ class _AddFavPlaceViewState extends State<AddFavPlaceView> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = '';
   final _id = RandomIntId().gusantaIdGen();
+  File? _selectedImage;
 
   void _saveItem() {
     if (_formKey.currentState!.validate()) {
@@ -21,6 +25,7 @@ class _AddFavPlaceViewState extends State<AddFavPlaceView> {
     var newItem = FavoritePlaceModel(
       name: _enteredName,
       id: _id,
+      image: _selectedImage!,
     );
     Navigator.pop(context, newItem);
   }
@@ -57,6 +62,12 @@ class _AddFavPlaceViewState extends State<AddFavPlaceView> {
                 },
                 onSaved: (value) {
                   _enteredName = value!;
+                },
+              ),
+              const SizedBox(height: 20),
+              ImageInput(
+                onPickImage: (image) {
+                  _selectedImage = image;
                 },
               ),
               const SizedBox(height: 20),

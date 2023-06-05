@@ -21,6 +21,10 @@ class PlacesListAlternative extends StatelessWidget {
       body: ListView.builder(
         itemCount: places.length,
         itemBuilder: (context, index) => ListTile(
+          leading: CircleAvatar(
+            radius: 20,
+            backgroundImage: FileImage(places[index].image),
+          ),
           title: Text(
             places[index].name,
             style: Theme.of(context)
@@ -32,7 +36,8 @@ class PlacesListAlternative extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (ctx) => FavoritePlaceView(favoritePlaceModel: places[index]),
+                builder: (ctx) =>
+                    FavoritePlaceView(favoritePlaceModel: places[index]),
               ),
             );
           },

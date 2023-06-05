@@ -11,11 +11,15 @@ class FavoritePlaceView extends StatelessWidget {
       appBar: AppBar(
         title: Text(favoritePlaceModel.name),
       ),
-      body: const Center(
-        child: Text(
-          'ini adalah favorite place',
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
+      body: Stack(
+        children: [
+          Image.file(
+            favoritePlaceModel.image,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        ],
       ),
     );
   }
