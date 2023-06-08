@@ -65,13 +65,19 @@ class _HomeFavPlaceViewState extends State<HomeFavPlaceView> {
               },
             );
           },
-           key: ValueKey(_favoritePlaces[index].id),
+          key: ValueKey(_favoritePlaces[index].id),
           child: ListTile(
             title: Text(
               _favoritePlaces[index].name,
-              style: const TextStyle(color: Colors.white),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: Colors.white),
             ),
             onTap: () => _onSelectFavoritePlace(index),
+            leading: CircleAvatar(
+                radius: 23,
+                backgroundImage: FileImage(_favoritePlaces[index].image)),
           ),
         ),
       ),

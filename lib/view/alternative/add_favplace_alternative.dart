@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:favorite_places/riverpod/user_places.dart';
 import 'package:favorite_places/widgets/image_input.dart';
+import 'package:favorite_places/widgets/location_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,11 +21,13 @@ class _AddFavoritePlaceAlternativeState
 
   void _saveText() {
     final enteredTitle = _nameController.text;
-    if (enteredTitle == '' || enteredTitle.isEmpty  || _selectedImage == null) {
+    if (enteredTitle == '' || enteredTitle.isEmpty || _selectedImage == null) {
       return;
     }
 
-    ref.read(userPlaceProvider.notifier).addPlace(enteredTitle, _selectedImage!);
+    ref
+        .read(userPlaceProvider.notifier)
+        .addPlace(enteredTitle, _selectedImage!);
 
     Navigator.pop(context, enteredTitle);
   }
@@ -57,6 +60,8 @@ class _AddFavoritePlaceAlternativeState
                 _selectedImage = image;
               },
             ),
+            const SizedBox(height: 12),
+            LocationInput(),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

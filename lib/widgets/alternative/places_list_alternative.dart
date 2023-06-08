@@ -29,7 +29,7 @@ class PlacesListAlternative extends StatelessWidget {
             places[index].name,
             style: Theme.of(context)
                 .textTheme
-                .bodySmall!
+                .bodyMedium!
                 .copyWith(color: Colors.white),
           ),
           onTap: () {
