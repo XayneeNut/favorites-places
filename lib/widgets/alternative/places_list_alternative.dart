@@ -29,9 +29,16 @@ class PlacesListAlternative extends StatelessWidget {
             places[index].name,
             style: Theme.of(context)
                 .textTheme
-                .bodyMedium!
+                .titleMedium!
                 .copyWith(color: Colors.white),
           ),
+          subtitle: Text(
+            places[index].location.formatedAddress,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall!
+                .copyWith(color: Colors.white),
+            ),
           onTap: () {
             Navigator.push(
               context,

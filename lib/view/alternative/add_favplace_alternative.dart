@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:favorite_places/models/location_model.dart';
 import 'package:favorite_places/riverpod/user_places.dart';
 import 'package:favorite_places/widgets/image_input.dart';
 import 'package:favorite_places/widgets/location_input.dart';
@@ -18,16 +19,20 @@ class _AddFavoritePlaceAlternativeState
     extends ConsumerState<AddFavoritePlaceAlternative> {
   final _nameController = TextEditingController();
   File? _selectedImage;
+  LocationModel? _selectedLocation;
 
   void _saveText() {
     final enteredTitle = _nameController.text;
-    if (enteredTitle == '' || enteredTitle.isEmpty || _selectedImage == null) {
+    if (enteredTitle == '' ||
+        enteredTitle.isEmpty ||
+        _selectedImage == null ||
+        _selectedLocation == null) {
       return;
     }
 
     ref
         .read(userPlaceProvider.notifier)
-        .addPlace(enteredTitle, _selectedImage!);
+        .addPlace(enteredTitle, _selectedImage!, _selectedLocation!);
 
     Navigator.pop(context, enteredTitle);
   }
@@ -61,7 +66,11 @@ class _AddFavoritePlaceAlternativeState
               },
             ),
             const SizedBox(height: 12),
-            LocationInput(),
+            LocationInput(
+              onSelectLocation: (location) {
+                _selectedLocation = location;
+              },
+            ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
