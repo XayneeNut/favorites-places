@@ -18,6 +18,8 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
+  LatLng? _pickedLocation;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,13 +28,22 @@ class _MapViewState extends State<MapView> {
         actions: [
           if (widget.isSelecting)
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context, _pickedLocation);
+              },
               icon: const Icon(Icons.save),
             ),
         ],
       ),
       body: FlutterMap(
         options: MapOptions(
+          onTap: !widget.isSelecting
+              ? null
+              : (tapPosition, point) {
+                  setState(() {
+                    _pickedLocation = point;
+                  });
+                },
           center: LatLng(
             widget.locationModel.latitude,
             widget.locationModel.longitude,
@@ -45,18 +56,19 @@ class _MapViewState extends State<MapView> {
                 'https://maps.geoapify.com/v1/tile/carto/{z}/{x}/{y}.png?&apiKey=c46b883adce04dcd9c70cfda39c9dd15',
           ),
           MarkerLayer(
-            markers: [
-              Marker(
-                point: LatLng(
-                  widget.locationModel.latitude,
-                  widget.locationModel.longitude,
-                ),
-                builder: (ctx) => Container(
-                  child: const Icon(Icons.location_on,
-                      color: Colors.red, size: 30),
-                ),
-              ),
-            ],
+            markers: (_pickedLocation == null && widget.isSelecting)
+                ? []
+                : [
+                    Marker(
+                      point: _pickedLocation ??
+                          LatLng(
+                            widget.locationModel.latitude,
+                            widget.locationModel.longitude,
+                          ),
+                      builder: (ctx) => const Icon(Icons.location_on,
+                          color: Colors.red, size: 30),
+                    ),
+                  ],
           ),
         ],
       ),

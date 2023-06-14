@@ -4,6 +4,7 @@ import 'package:favorite_places/generator/random_int_id.dart';
 import 'package:favorite_places/models/favorite_place_model.dart';
 import 'package:favorite_places/models/location_model.dart';
 import 'package:favorite_places/widgets/image_input.dart';
+import 'package:favorite_places/widgets/location_input.dart';
 import 'package:flutter/material.dart';
 
 class AddFavPlaceView extends StatefulWidget {
@@ -24,12 +25,13 @@ class _AddFavPlaceViewState extends State<AddFavPlaceView> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
     }
+    if (!context.mounted) return;
+
     var newItem = FavoritePlaceModel(
-      name: _enteredName,
-      id: _id,
-      image: _selectedImage!,
-      location: _selectedLocation!
-    );
+        name: _enteredName,
+        id: _id,
+        image: _selectedImage!,
+        location: _selectedLocation!);
     Navigator.pop(context, newItem);
   }
 
@@ -57,6 +59,7 @@ class _AddFavPlaceViewState extends State<AddFavPlaceView> {
                 validator: (value) {
                   if (value == null ||
                       value.isEmpty ||
+                      value == '' ||
                       value.trim().length <= 1 ||
                       value.trim().length > 50) {
                     return 'Must be between 1 and 50 characters';
@@ -73,6 +76,10 @@ class _AddFavPlaceViewState extends State<AddFavPlaceView> {
                   _selectedImage = image;
                 },
               ),
+              const SizedBox(height: 20),
+              LocationInput(onSelectLocation: (location) {
+                _selectedLocation = location;
+              }),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
