@@ -1,4 +1,4 @@
-import 'package:favorite_places/view/alternative/home_favplace_alternative.dart';
+import 'package:favorite_places/view/home_favplace_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Great Places',
       theme: theme,
-      home: const HomeFavoritePlaceAlternative(),
+      home: const HomeFavPlaceView(),
     );
   }
 }
