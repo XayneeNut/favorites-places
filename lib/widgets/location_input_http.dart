@@ -1,23 +1,28 @@
 import 'dart:convert';
 
-import 'package:favorite_places/models/location_model.dart';
-import 'package:favorite_places/view/map_view.dart';
+import 'package:favorite_places/controller/location_controller.dart';
+import 'package:favorite_places/models/location_http_model.dart';
+import 'package:favorite_places/view/map_view_http.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
-class LocationInput extends StatefulWidget {
-  const LocationInput({super.key, required this.onSelectLocation});
+class LocationInputHttp extends StatefulWidget {
+  const LocationInputHttp(
+      {super.key,
+      required this.onSelectLocation,
+      required this.locationController});
 
-  final void Function(LocationModel locationModel) onSelectLocation;
+  final void Function(LocationHttpModel locationModel) onSelectLocation;
+  final LocationController locationController;
 
   @override
-  State<LocationInput> createState() => _LocationInputState();
+  State<LocationInputHttp> createState() => _LocationInputHttpState();
 }
 
-class _LocationInputState extends State<LocationInput> {
-  LocationModel? _pickLocation;
+class _LocationInputHttpState extends State<LocationInputHttp> {
+  LocationHttpModel? _pickLocation;
   var _isGettingLocation = false;
 
   String get locationImage {
@@ -37,20 +42,22 @@ class _LocationInputState extends State<LocationInput> {
     final resData = json.decode(response.body);
     final address = resData['display_name'];
 
-    setState(
-      () {
-        _pickLocation = LocationModel(
-            latitude: latitude, longitude: longitude, formatedAddress: address);
-        _isGettingLocation = false;
-      },
-    );
+    try {
+      final createdLocation = await widget.locationController.saveData(
+          latitude: latitude, longitude: longitude, formatedAddress: address);
 
-    widget.onSelectLocation(_pickLocation!);
+      setState(
+        () {
+          _pickLocation = createdLocation;
+        },
+      );
+
+      widget.onSelectLocation(_pickLocation!);
+    } catch (e) {}
   }
 
   void _getLocation() async {
     Location location = Location();
-
     bool serviceEnabled;
     PermissionStatus permissionGranted;
     LocationData locationData;
@@ -75,22 +82,30 @@ class _LocationInputState extends State<LocationInput> {
       _isGettingLocation = true;
     });
 
-    locationData = await location.getLocation();
-    final lat = locationData.latitude;
-    final long = locationData.longitude;
+    try {
+      locationData = await location.getLocation();
+      final lat = locationData.latitude;
+      final long = locationData.longitude;
 
-    if (lat == null || long == null) {
-      return;
+      if (lat == null || long == null) {
+        throw Exception('Failed to get current location');
+      }
+
+      await _savePlace(lat, long);
+
+      setState(() {
+        _isGettingLocation = false;
+      });
+    } catch (e) {
+      // Handle error message
     }
-
-    _savePlace(lat, long);
   }
 
   void _selectOnMap() async {
     final pickedLocation = await Navigator.push<LatLng>(
       context,
       MaterialPageRoute(
-        builder: (context) => MapView(),
+        builder: (context) => const MapViewHttp(),
       ),
     );
 
@@ -98,7 +113,15 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
 
+    setState(() {
+      _isGettingLocation = true;
+    });
+
     _savePlace(pickedLocation.latitude, pickedLocation.longitude);
+
+    setState(() {
+        _isGettingLocation = false;
+      });
   }
 
   @override

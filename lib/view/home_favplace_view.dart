@@ -1,8 +1,8 @@
 import 'package:favorite_places/controller/favorite_places_controller.dart';
 import 'package:favorite_places/controller/location_controller.dart';
 import 'package:favorite_places/controller/new_places_controller.dart';
-import 'package:favorite_places/models/http/favorite_place_http_model.dart';
-import 'package:favorite_places/models/http/location_http_model.dart';
+import 'package:favorite_places/models/favorite_place_http_model.dart';
+import 'package:favorite_places/models/location_http_model.dart';
 import 'package:favorite_places/view/add_favplace_view.dart';
 import 'package:favorite_places/widgets/places_list.dart';
 import 'package:flutter/material.dart';

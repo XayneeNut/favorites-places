@@ -4,14 +4,14 @@ import 'dart:io';
 import 'package:favorite_places/controller/favorite_places_controller.dart';
 import 'package:favorite_places/controller/location_controller.dart';
 import 'package:favorite_places/controller/new_places_controller.dart';
-import 'package:favorite_places/models/http/favorite_place_http_model.dart';
-import 'package:favorite_places/models/http/location_http_model.dart';
-import 'package:favorite_places/widgets/alternative/location_input_http.dart';
+import 'package:favorite_places/models/favorite_place_http_model.dart';
+import 'package:favorite_places/models/location_http_model.dart';
+import 'package:favorite_places/widgets/location_input_http.dart';
 import 'package:favorite_places/widgets/image_input.dart';
 import 'package:flutter/material.dart';
 
 class AddFavPlaceView extends StatefulWidget {
-   AddFavPlaceView(
+  AddFavPlaceView(
       {super.key,
       required this.newPlacesController,
       required this.favoritePlacesController,
@@ -21,6 +21,7 @@ class AddFavPlaceView extends StatefulWidget {
   final NewPlacesController newPlacesController;
   final FavoritePlacesController favoritePlacesController;
   LocationHttpModel? pickedLocation;
+  FavoritePlacesHttpModel? favoritePlacesHttpModel;
   final LocationController locationController;
 
   @override
@@ -31,10 +32,9 @@ class _AddFavPlaceViewState extends State<AddFavPlaceView> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = '';
   File? _selectedImage;
+  var _isSending = false;
 
   Future<void> _saveItem() async {
-    final response = await widget.favoritePlacesController.getUrl();
-
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
@@ -47,6 +47,7 @@ class _AddFavPlaceViewState extends State<AddFavPlaceView> {
         );
         return;
       }
+
       await widget.newPlacesController.saveItem(
           image: _selectedImage!.path,
           name: _enteredName,
@@ -55,21 +56,26 @@ class _AddFavPlaceViewState extends State<AddFavPlaceView> {
       final items = await widget.favoritePlacesController.loadItem();
       setState(() {
         widget.newPlacesController.favoritePlacesModel = items;
+        _isSending = true;
       });
+
+      final response =
+          await widget.favoritePlacesController.getId(items.first.id);
+      final jsonData = json.decode(response.body);
+
+      final placesId = jsonData['placesId'];
 
       if (!context.mounted) return;
 
-      final jsonData = json.decode(response.body);
-      final firstItem = jsonData.first;
-      final placesId = firstItem['placesId'];
-
       Navigator.pop(
-          context,
-          FavoritePlacesHttpModel(
-              name: _enteredName,
-              id: placesId,
-              image: File(_selectedImage!.path),
-              location: widget.pickedLocation!));
+        context,
+        FavoritePlacesHttpModel(
+          name: _enteredName,
+          id: placesId.toString(),
+          image: File(_selectedImage!.path),
+          location: widget.pickedLocation!,
+        ),
+      );
     }
   }
 
@@ -127,12 +133,18 @@ class _AddFavPlaceViewState extends State<AddFavPlaceView> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton.icon(
-                    onPressed: _saveItem,
+                    onPressed: _isSending ? null : _saveItem,
                     icon: const Icon(Icons.add),
-                    label: const Text(
-                      'add',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    label: _isSending
+                        ? const SizedBox(
+                            height: 16,
+                            width: 16,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text(
+                            'add',
+                            style: TextStyle(color: Colors.white),
+                          ),
                   ),
                 ],
               ),

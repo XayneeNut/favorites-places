@@ -1,6 +1,6 @@
 import 'package:favorite_places/controller/favorite_places_controller.dart';
-import 'package:favorite_places/models/http/favorite_place_http_model.dart';
-import 'package:favorite_places/view/alternative/favorite_place_http.dart';
+import 'package:favorite_places/models/favorite_place_http_model.dart';
+import 'package:favorite_places/view/favorite_place_http.dart';
 import 'package:flutter/material.dart';
 
 class PlacesList extends StatefulWidget {
@@ -41,6 +41,7 @@ class _PlacesListState extends State<PlacesList> {
     await _favoritePlacesController.deleteData(favoritePlacesHttpModel);
 
     if (response.statusCode >= 400) {
+      print(response.body);
       setState(() {
         widget.places.insert(index, favoritePlacesHttpModel);
       });
@@ -60,9 +61,19 @@ class _PlacesListState extends State<PlacesList> {
     return ListView.builder(
       itemCount: widget.places.length,
       itemBuilder: (ctx, index) => Dismissible(
+        direction: DismissDirection.endToStart,
         onDismissed: (direction) {
           _deleteData(widget.places[index]);
         },
+        background: Container(
+          color: Colors.red,
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 20),
+          child: const Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+        ),
         key: ValueKey(widget.places[index].id),
         child: ListTile(
           title: Text(

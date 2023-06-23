@@ -9,13 +9,4 @@ class LocationHttpModel {
   final double latitude;
   final double longitude;
   final String formattedAddress;
-
-   Map<String, dynamic> toJson() {
-    return {
-      'locationId': id,
-      'latitude': latitude,
-      'longitude': longitude,
-      'formattedAddress': formattedAddress,
-    };
-  }
 }

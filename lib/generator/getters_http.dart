@@ -1,5 +1,5 @@
 
-import 'package:favorite_places/models/http/favorite_place_http_model.dart';
+import 'package:favorite_places/models/favorite_place_http_model.dart';
 
 class GettersHttp {
   final FavoritePlacesHttpModel favoritePlace;

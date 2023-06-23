@@ -1,11 +1,11 @@
-import 'package:favorite_places/generator/getters.dart';
-import 'package:favorite_places/models/favorite_place_model.dart';
-import 'package:favorite_places/view/map_view.dart';
+import 'package:favorite_places/generator/getters_http.dart';
+import 'package:favorite_places/models/favorite_place_http_model.dart';
+import 'package:favorite_places/view/map_view_http.dart';
 import 'package:flutter/material.dart';
 
-class FavoritePlaceView extends StatelessWidget {
-  const FavoritePlaceView({super.key, required this.favoritePlaceModel});
-  final FavoritePlaceModel favoritePlaceModel;
+class FavoritePlaceHttp extends StatelessWidget {
+  const FavoritePlaceHttp({super.key, required this.favoritePlaceModel});
+  final FavoritePlacesHttpModel favoritePlaceModel;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class FavoritePlaceView extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (ctx) => MapView(
+                        builder: (ctx) => MapViewHttp(
                           locationModel: favoritePlaceModel.location,
                           isSelecting: false,
                         ),
@@ -42,7 +42,7 @@ class FavoritePlaceView extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 70,
                     backgroundImage:
-                        NetworkImage(Getters(favoritePlaceModel).locationImage),
+                        NetworkImage(GettersHttp(favoritePlaceModel).locationImage),
                   ),
                 ),
                 Container(
@@ -58,7 +58,7 @@ class FavoritePlaceView extends StatelessWidget {
                         end: Alignment.bottomCenter),
                   ),
                   child: Text(
-                    favoritePlaceModel.location.formatedAddress,
+                    favoritePlaceModel.location.formattedAddress,
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge!

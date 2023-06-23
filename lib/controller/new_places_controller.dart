@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:favorite_places/models/http/favorite_place_http_model.dart';
-import 'package:favorite_places/models/http/location_http_model.dart';
+import 'package:favorite_places/models/favorite_place_http_model.dart';
+import 'package:favorite_places/models/location_http_model.dart';
 import 'package:http/http.dart' as http;
 
 class NewPlacesController {

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:favorite_places/models/http/favorite_place_http_model.dart';
-import 'package:favorite_places/models/http/location_http_model.dart';
+import 'package:favorite_places/models/favorite_place_http_model.dart';
+import 'package:favorite_places/models/location_http_model.dart';
 import 'package:http/http.dart' as http;
 
 class FavoritePlacesController {
@@ -12,10 +12,14 @@ class FavoritePlacesController {
     return response;
   }
 
-  Future<List<FavoritePlacesHttpModel>> loadItem() async {
-    final url = Uri.parse('http://10.0.2.2:8124/api/v1/places/get-all');
-
+    Future<http.Response> getId(String id) async {
+    final url = Uri.parse('http://10.0.2.2:8124/api/v1/places/get/$id');
     final response = await http.get(url);
+    return response;
+  }
+
+  Future<List<FavoritePlacesHttpModel>> loadItem() async {
+    final response = await getUrl();
     final jsonData = json.decode(response.body);
 
     List<FavoritePlacesHttpModel> favoritePlacesModel = [];
@@ -32,7 +36,7 @@ class FavoritePlacesController {
 
       final favoritePlaces = FavoritePlacesHttpModel(
         name: name,
-        id: favoritePlaceId,
+        id: favoritePlaceId.toString(),
         image: File(image as String),
         location: LocationHttpModel(
             latitude: latitude,
@@ -42,10 +46,20 @@ class FavoritePlacesController {
       );
       favoritePlacesModel.add(favoritePlaces);
     }
+    print(response.body);
     return favoritePlacesModel;
   }
 
-  Future<http.Response> deleteData(FavoritePlacesHttpModel favoritePlaceHttpModel) {
+  Future<http.Response> deleteData(
+      FavoritePlacesHttpModel favoritePlaceHttpModel) async {
+    final deleteUrl = Uri.parse(
+        'http://10.0.2.2:8124/api/v1/places/delete/${favoritePlaceHttpModel.id}');
+    final deleteItem = await http.delete(deleteUrl);
+    return deleteItem;
+  }
+
+  Future<http.Response> removeItem(
+      FavoritePlacesHttpModel favoritePlaceHttpModel) {
     final deleteUrl = Uri.parse(
         'http://10.0.2.2:8124/api/v1/places/delete/${favoritePlaceHttpModel.id}');
     final deleteItem = http.delete(deleteUrl);
